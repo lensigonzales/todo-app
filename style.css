@@ -1,0 +1,81 @@
+@import url("https://fonts.googleapis.com/css2?family=Wellfleet&display=swap");
+
+:root {
+  --main-bg-color: rgb(200, 176, 228);
+  --main-text-color: rgb(34, 0, 76);
+  --main-shadow-color: rgb(76, 0, 168);
+  --box-shadow-custom: 4px 5px 0px 1px var(--main-shadow-color);
+}
+
+body {
+  box-sizing: border-box;
+  font-family: "Wellfleet", monospace;
+  height: 100dvh;
+  width: 100dvw;
+  display: grid;
+  justify-items: center;
+  grid-template-rows: 0.5fr 0.5fr 0.5fr 7fr;
+  grid-template-areas:
+    "  title  "
+    "  input  "
+    "  filter  "
+    "  todos  ";
+}
+
+.title {
+  grid-area: title;
+}
+
+.input-wrapper {
+  grid-area: input;
+}
+
+.todo-input {
+  all: unset;
+
+  width: 14rem;
+}
+
+.btn {
+  all: unset;
+  text-align: center;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.add-btn {
+  width: 1rem;
+}
+
+.filter {
+  grid-area: filter;
+  display: flex;
+  align-self: center;
+}
+
+.list-wrapper {
+  margin: 3rem 0;
+  position: relative;
+  grid-area: todos;
+  padding: 2rem;
+  width: 25rem;
+}
+
+.badge {
+  position: absolute;
+  left: 150px;
+  top: -20px;
+  background-color: var(--main-shadow-color);
+  color: white;
+  padding: 0.5rem;
+  width: 100px;
+  text-align: center;
+  border-radius: 20px;
+}
+
+.box-style {
+  padding: 0.75rem;
+  background-color: var(--main-bg-color);
+  box-shadow: 4px 5px 0px 1px var(--main-shadow-color);
+  border-radius: 20px;
+}
