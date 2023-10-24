@@ -101,7 +101,7 @@ list.addEventListener("change", (event) => {
 
 /* --- REMOVE DONE TODOS --- */
 //TODO: Funktioniert noch nicht
-/* 
+
 removeBtn.addEventListener("click", () => {
   const doneTodos = state.todos.filter((todo) => todo.done);
 
@@ -112,4 +112,6 @@ removeBtn.addEventListener("click", () => {
         loadData();
       });
   });
-}); */
+});
+
+loadData();
