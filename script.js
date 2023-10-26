@@ -66,12 +66,7 @@ addBtn.addEventListener("click", () => {
       body: JSON.stringify(newTodo),
     })
       .then((response) => response.json())
-      .then((newTodoData) => {
-        state.todos.push(newTodoData);
-        renderTodos();
-      });
-  } else {
-    alert("Todo is already in the list!");
+      .then(() => loadData());
   }
 });
 
@@ -94,9 +89,7 @@ list.addEventListener("change", (event) => {
     body: JSON.stringify(todo),
   })
     .then((response) => response.json())
-    .then((updatedTodoData) => {
-      renderTodos();
-    });
+    .then(() => loadData());
 });
 
 /* --- REMOVE DONE TODOS --- */
