@@ -9,22 +9,22 @@ const url = "http://localhost:4730/todos";
 
 let state = {
   todos: [],
-  currentFilter: "",
+  currentFilter: "", //implemented in old version (localStorage Version)
 };
 
-function loadData() {
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => {
-      state.todos = data;
-      renderTodos();
-    });
+//GET all todos from api
+async function loadData() {
+  const response = await fetch(url);
+  state.todos = await response.json();
+
+  renderTodos();
 }
 
 function renderTodos() {
   input.value = "";
   list.innerHTML = "";
 
+  //for filter implementation:
   //const generatedTodos = getFilteredData();
 
   state.todos.forEach((todo) => {
@@ -43,7 +43,22 @@ function renderTodos() {
 }
 
 /* --- ADD NEW TODO --- */
-addBtn.addEventListener("click", () => {
+
+//POST/add todo to api state
+async function addTodo(todo) {
+  await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(todo),
+  });
+
+  loadData();
+}
+//event listener add new todo
+addBtn.addEventListener("click", (event) => {
+  event.preventDefault();
   const newDescription = input.value.trim();
   /* -- Prevent Duplicates -- */
   //Find a todo with the same description in the state
@@ -58,38 +73,31 @@ addBtn.addEventListener("click", () => {
       done: false,
     };
 
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newTodo),
-    })
-      .then((response) => response.json())
-      .then(() => loadData());
+    addTodo(newTodo);
   }
 });
 
 /* --- CHECKED & UNCHECKED TODOS --- */
-list.addEventListener("change", (event) => {
-  const checkbox = event.target;
-  const listElement = checkbox.parentElement;
-  const todoId = listElement.id;
-  /* const selectedTodo = state.todos.find((todo) => todo.id === todoId);
-  selectedTodo.done = checkbox.checked; */
-
-  const todo = listElement.todoObj;
-  todo.done = checkbox.checked;
-
-  fetch(`${url}/${todoId}`, {
+//PUT/update todo to api state
+async function updateTodo(todo) {
+  await fetch(`${url}/${todo.id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(todo),
-  })
-    .then((response) => response.json())
-    .then(() => loadData());
+  });
+
+  loadData();
+}
+//event listener check and uncheck todo
+list.addEventListener("change", (event) => {
+  const checkbox = event.target;
+  const listElement = checkbox.parentElement;
+  const todo = listElement.todoObj;
+  todo.done = checkbox.checked;
+
+  updateTodo(todo);
 });
 
 /* --- REMOVE DONE TODOS --- */
@@ -97,13 +105,11 @@ list.addEventListener("change", (event) => {
 removeBtn.addEventListener("click", () => {
   const doneTodos = state.todos.filter((todo) => todo.done);
 
-  doneTodos.forEach((todo) => {
+  const promisesArray = doneTodos.map((todo) =>
     fetch(`${url}/${todo.id}`, { method: "DELETE" })
-      .then((response) => response.json())
-      .then(() => {
-        loadData();
-      });
-  });
+  );
+  //waits for all the promisses to be resolved
+  Promise.all(promisesArray).then(() => loadData());
 });
 
 loadData();
