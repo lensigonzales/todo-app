@@ -14,10 +14,14 @@ let state = {
 
 //GET all todos from api
 async function loadData() {
-  const response = await fetch(url);
-  state.todos = await response.json();
+  try {
+    const response = await fetch(url);
+    state.todos = await response.json();
 
-  renderTodos();
+    renderTodos();
+  } catch (error) {
+    alert(`Error: ${error}`);
+  }
 }
 
 function renderTodos() {
@@ -25,7 +29,7 @@ function renderTodos() {
   list.innerHTML = "";
 
   //for filter implementation:
-  //const generatedTodos = getFilteredData();
+  //loop over const generatedTodos = getFilteredData();
 
   state.todos.forEach((todo) => {
     const newTodo = document.createElement("li");
