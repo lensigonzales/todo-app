@@ -1,15 +1,15 @@
 "use strict";
 /* --- SELECTORS --- */
-const list = document.getElementById("#todo-list");
-const addBtn = document.getElementById("#add-btn");
-const input = document.getElementById("#add-todo");
-const filter = document.getElementById("#filter-box");
-const removeBtn = document.getElementById("#remove-btn");
+const list = document.getElementById("todo-list");
+const addBtn = document.getElementById("add-btn");
+const input = document.getElementById("add-todo");
+const filterEl = document.getElementById("filter-box");
+const removeBtn = document.getElementById("remove-btn");
 const url = "http://localhost:4730/todos";
 
 let state = {
   todos: [],
-  currentFilter: "", //implemented in old version (localStorage Version)
+  currentFilter: "all",
 };
 
 //GET all todos from api
@@ -31,9 +31,9 @@ function renderTodos() {
   list.innerHTML = "";
 
   //for filter implementation:
-  //loop over const generatedTodos = getFilteredData();
+  const filteredTodos = getFilteredData();
 
-  state.todos.forEach((todo) => {
+  filteredTodos.todos.forEach((todo) => {
     const newTodo = document.createElement("li");
     newTodo.innerText = todo.description;
     newTodo.id = todo.id;
@@ -47,6 +47,30 @@ function renderTodos() {
     list.appendChild(newTodo);
   });
 }
+/* --- FILTERED DATA --- */
+function getFilteredData() {
+  let result = {};
+
+  switch (state.currentFilter) {
+    case "all":
+      return (result = state);
+    case "open":
+      result.todos = state.todos.filter((item) => item.done === false);
+      return result;
+    case "done":
+      result.todos = state.todos.filter((item) => item.done);
+      return result;
+    default:
+      return (result = state);
+  }
+}
+/* --- SET CURRENT FILTER --- */
+filterEl.addEventListener("change", (event) => {
+  if (event.target.checked) {
+    state.currentFilter = event.target.value;
+  }
+  renderTodos();
+});
 
 /* --- ADD NEW TODO --- */
 
