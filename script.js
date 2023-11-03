@@ -1,10 +1,10 @@
 "use strict";
 /* --- SELECTORS --- */
-const list = document.querySelector(".todo-list");
-const addBtn = document.querySelector(".add-btn");
-const input = document.querySelector(".todo-input");
-const filter = document.querySelector(".filter");
-const removeBtn = document.querySelector(".remove-btn");
+const list = document.getElementById("#todo-list");
+const addBtn = document.getElementById("#add-btn");
+const input = document.getElementById("#add-todo");
+const filter = document.getElementById("#filter-box");
+const removeBtn = document.getElementById("#remove-btn");
 const url = "http://localhost:4730/todos";
 
 let state = {
@@ -16,6 +16,9 @@ let state = {
 async function loadData() {
   try {
     const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
     state.todos = await response.json();
 
     renderTodos();
@@ -25,7 +28,6 @@ async function loadData() {
 }
 
 function renderTodos() {
-  input.value = "";
   list.innerHTML = "";
 
   //for filter implementation:
@@ -33,13 +35,13 @@ function renderTodos() {
 
   state.todos.forEach((todo) => {
     const newTodo = document.createElement("li");
-    const checkbox = document.createElement("input");
-
-    checkbox.type = "checkbox";
-    checkbox.checked = todo.done;
     newTodo.innerText = todo.description;
     newTodo.id = todo.id;
     newTodo.todoObj = todo;
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = todo.done;
 
     newTodo.appendChild(checkbox);
     list.appendChild(newTodo);
@@ -61,24 +63,26 @@ async function addTodo(todo) {
   loadData();
 }
 //event listener add new todo
-addBtn.addEventListener("click", (event) => {
+addBtn.addEventListener("click", async (event) => {
   event.preventDefault();
   const newDescription = input.value.trim();
   /* -- Prevent Duplicates -- */
   //Find a todo with the same description in the state
-  const duplicate = state.todos.filter(
+  const hasDuplicate = state.todos.some(
     (el) => el.description.toUpperCase() === newDescription.toUpperCase()
   );
   //Only if there is no duplicate then create a new todo and add it to the state
-  if (duplicate.length === 0) {
-    const newTodo = {
-      id: new Date().getTime(),
-      description: newDescription,
-      done: false,
-    };
-
-    addTodo(newTodo);
+  if (hasDuplicate) {
+    return;
   }
+
+  await addTodo({
+    id: new Date().getTime(),
+    description: newDescription,
+    done: false,
+  });
+
+  input.value = "";
 });
 
 /* --- CHECKED & UNCHECKED TODOS --- */
@@ -106,14 +110,15 @@ list.addEventListener("change", (event) => {
 
 /* --- REMOVE DONE TODOS --- */
 
-removeBtn.addEventListener("click", () => {
+removeBtn.addEventListener("click", async () => {
   const doneTodos = state.todos.filter((todo) => todo.done);
 
   const promisesArray = doneTodos.map((todo) =>
     fetch(`${url}/${todo.id}`, { method: "DELETE" })
   );
   //waits for all the promisses to be resolved
-  Promise.all(promisesArray).then(() => loadData());
+  await Promise.all(promisesArray);
+  loadData();
 });
 
 loadData();

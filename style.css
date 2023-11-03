@@ -31,6 +31,10 @@ body {
   display: flex;
 }
 
+#todo-description {
+  visibility: hidden;
+}
+
 .todo-input {
   all: unset;
   height: 1.5rem;

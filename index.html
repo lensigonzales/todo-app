@@ -2,42 +2,43 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>TODO App</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>TODO App</title>
 </head>
 
 <body>
-    <h1 class="title">TODO</h1>
-    <div class="input-wrapper">
-        <form id="form-addtodos" action="">
-            <input class="todo-input box-style" type="text" placeholder="Todo">
-            <button class="add-btn btn box-style" type="submit">Add</button>
-        </form>
-        <button class="remove-btn btn box-style">Remove Done</button>
+  <h1 class="title">TODO</h1>
+  <div class="input-wrapper">
+    <form id="form-addtodos" action="">
+      <label id="todo-description" for="add-todo">Todo description</label>
+      <input id="add-todo" class="todo-input box-style" type="text" placeholder="Todo">
+      <button id="add-btn" class="add-btn btn box-style" type="submit">Add</button>
+    </form>
+    <button id="remove-btn" class="remove-btn btn box-style">Remove Done</button>
+  </div>
+  <div id="filter-box" class="filter box-style">
+    <div class="filter-all">
+      <input type="radio" name="filter" value="all" id="all" checked>
+      <label for="all">All</label>
     </div>
-    <div class="filter box-style">
-        <div class="filter-all">
-            <input type="radio" name="filter" value="all" id="all" checked>
-            <label for="all">All</label>
-        </div>
-        <div class="filter-open">
-            <input type="radio" name="filter" value="open" id="open">
-            <label for="open">Open</label>
-        </div>
-        <div class="filter-done">
-            <input type="radio" name="filter" value="done" id="done">
-            <label for="done">Done</label>
-        </div>
+    <div class="filter-open">
+      <input type="radio" name="filter" value="open" id="open">
+      <label for="open">Open</label>
     </div>
-    <section class="list-wrapper box-style">
-        <aside class="badge">TODO LIST</aside>
-        <ul class="todo-list">
+    <div class="filter-done">
+      <input type="radio" name="filter" value="done" id="done">
+      <label for="done">Done</label>
+    </div>
+  </div>
+  <section class="list-wrapper box-style">
+    <aside class="badge">TODO LIST</aside>
+    <ul id="todo-list">
 
-        </ul>
-    </section>
-    <script src="script.js"></script>
+    </ul>
+  </section>
+  <script src="script.js"></script>
 </body>
 
 </html>
